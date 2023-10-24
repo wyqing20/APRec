@@ -24,7 +24,7 @@ series = {SIGIR '23}
 
 
 
-##### Our implement is based on the [ReChorus](https://github.com/THUwangcy/ReChorus)
+##### Our implementation is based on the [ReChorus](https://github.com/THUwangcy/ReChorus)
 
 ## Example to run the codes	
 
@@ -36,7 +36,7 @@ On pre-training stage:
 python main.py --model_name Attack4AliEC --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset 'AttackAliEC' --gpu 1 --stage 1 --RATE 0.0
 ```
 
---RATE means the replacement rate, -1.0 means pre-traning a clean model
+--RATE means the replacement rate, -1.0 means pre-training a clean model
 
 On downstream dataset:
 
