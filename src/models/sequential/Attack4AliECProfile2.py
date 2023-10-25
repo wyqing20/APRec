@@ -399,24 +399,7 @@ class Attack4AliECProfile2(SequentialModel):
             feed_dict['occupation']=self.data['occupation'][index]
             feed_dict['class_level']=self.data['new_user_class_level'][index]
 
-            if self.phase=='zero_shot_test2':
-                
-                feed_dict['phase']=1
-            else:
-                 feed_dict['phase']=0
-            if self.model.stage==8:
-                feed_copy=self.data_Augment(feed_dict.copy())
-                feed_dict['augment_history_items']=feed_copy['history_items']
-                feed_dict['augment_history_times']=feed_copy['history_times']
-                feed_dict['augment_lengths']=feed_copy['lengths']
-            if self.model.stage==6:
-                feed_dict=self.data_Augment(feed_dict)
-            # if self.model.stage==13:
-            #     feed_dict=self.mask_feature(feed_dict)
-            if self.model.stage==9 or self.model.stage==10:
-                augment=np.random.random()
-                feed_dict['real']=[0,0,0]
-                feed_dict=self.few_shot_augment(feed_dict)   
+          
             return feed_dict
 
 
