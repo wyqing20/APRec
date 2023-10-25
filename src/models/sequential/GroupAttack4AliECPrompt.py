@@ -30,7 +30,7 @@ from utils import utils
 import random
 import torch.nn.functional as F
 
-class Attack4AliECProfile3(SequentialModel):
+class GroupAttack4AliECPrompt(SequentialModel):
     reader='AttackAliECReader'
     # reader= "BaseReader"
     # reader='AliECReadertotal'
