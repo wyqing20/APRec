@@ -128,8 +128,7 @@ class Attack4AliECProfile3(SequentialModel):
         if self.stage != 1:  # fine-tune
             print('pretrain path: ', self.pre_path)
             if (self.stage==3 or self.stage==2)  :
-                # path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-
+               
                 if os.path.exists(self.pre_path):
                     # self.prefix_gen=None
                     self.load_model(self.pre_path)
@@ -137,13 +136,6 @@ class Attack4AliECProfile3(SequentialModel):
                 else:
                     logging.info('Train from scratch!')
             elif self.stage==4 or self.stage==7:
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__target_user1__lr=3e-05__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__w_prompt=0__w_feature=1.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
-                self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
                 self.pre_path="/data/wuyq/APRec/model/Attack4AliECProfile3BackUp2/Attack4AliECProfile3__AttackAliEC__0__RATE=0.1__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=5__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
                 if os.path.exists(self.pre_path):
                     # self.prefix_gen=None
@@ -155,10 +147,6 @@ class Attack4AliECProfile3(SequentialModel):
                 else:
                     logging.info('Train from scratch!')
             elif self.stage==5:
-                # path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-                path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=3e-05__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__temp=1.0__cl_weight=0.4__w_prompt=0.pt"
-                path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__w_prompt=0__w_feature=1.pt"
-                # path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__target_user1__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
                 path="/data/wuyq/APRec/model/Attack4AliECProfile3/Attack4AliECProfile3__AttackAliEC__0__RATE=-1.0__lr=0.0001__l2=1e-06__emb_size=64__num_layers=1__num_heads=1__f_encoder=Linear__stage=2__history_max=100__dropout=0__w_prompt=0__w_feature=0.pt"
                 self.model_path=path.replace("stage=2","stage=5")
                 self.model_path= self.model_path.replace("RATE=-1.0","RATE="+str(self.rate))
@@ -188,14 +176,7 @@ class Attack4AliECProfile3(SequentialModel):
                 logging.info(name)
             else:
                 pass
-        # for name, p in filter(lambda x: x[1].requires_grad, self.named_parameters()):
-        #     if 'cold_side' in name or 'prefix' in name or 'user_embeddings' in name or 'side_embeddings' in name or 'project' in name :
-        #         cold_paramters.append(p)
-        #         logging.info(name)
-               
-            # if 'i_embeddings' not in name and 'p_embeddings' not in name or True:
-            #     cold_paramters.append(p)
-            #     logging.info(name)
+    
 
         return [{'params':cold_paramters}]
 
@@ -222,15 +203,6 @@ class Attack4AliECProfile3(SequentialModel):
         return [{'params':cold_paramters}]
     def P_tuning(self):
         return self.customize_parameters()
-        # cold_paramters=[]
-        # paramters=[]
-        # for name, p in filter(lambda x: x[1].requires_grad, self.named_parameters()):
-        #     if 'i_embedding' not  in name:
-        #         cold_paramters.append(p)
-        #         logging.info(name)
-        #     else:
-        #         paramters.append(p)
-        # return [{'params':cold_paramters}]
 
     def reset_embeddings(self):
         gender_embeddings=nn.Embedding(self.n_genders+1,self.emb_size,padding_idx=0)
@@ -319,21 +291,7 @@ class Attack4AliECProfile3(SequentialModel):
         else:
             side_info=[gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector]
         return side_info
-    def get_user_augment_profiles(self,feed_dict,embedding_dcit,cat=True):
-        gender_vector=embedding_dcit['gender_embeddings'](feed_dict['augment_gender'])
-        age_vector=embedding_dcit['age_embeddings'](feed_dict['augment_age'])
-        segid_vecotr=embedding_dcit['segid_embeddings'](feed_dict['augment_segid'])
-        groupid_vector=embedding_dcit['groupid_embeddings'](feed_dict['augment_groupid'])
-        pvalue_level_vector=embedding_dcit['pvalue_level_embeddings'](feed_dict['augment_pvalue_level'])
-        shopping_level_vecotr=embedding_dcit['shopping_level_embeddings'](feed_dict['augment_shopping_level'])
-        occupation_vector=embedding_dcit['occupation_embeddings'](feed_dict['augment_occupation'])
-        class_level_vector=embedding_dcit['class_level_embeddings'](feed_dict['augment_class_level'])
-        if cat:
-            side_info=torch.cat([gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector],dim=1)
-        else:
-            side_info=[gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector]
-        return side_info
-
+    
     def forward(self, feed_dict):
         side_emb=None
         prefix=None
@@ -420,14 +378,7 @@ class Attack4AliECProfile3(SequentialModel):
 
 
     def loss(self, out_dict: dict) -> torch.Tensor:
-        if self.stage==8:
-            return self.cl_lossfun(out_dict['score_mat'],out_dict['label'])
-        if self.stage==9 or self.stage==10:
-            
-            cl_loss=self.cl_lossfun(out_dict['score_mat'],out_dict['label'])
-            
-            return super().loss(out_dict)+cl_loss*0.1,super().loss(out_dict),cl_loss
-        # return super().loss(out_dict),super().loss(out_dict),torch.tensor([0.0]).to('cuda:0')
+      
         return super().loss(out_dict)
         
 
@@ -566,67 +517,6 @@ class SASRecEncoder(nn.Module):
 
 
 
-class GRU4Rec(nn.Module):
-    def __init__(self,emb_size,hidden_size):
-        super().__init__()
-        self.emb_size=emb_size
-        self.hidden_size=hidden_size
-        self.rnn = nn.GRU(input_size=self.emb_size, hidden_size=self.hidden_size, batch_first=True)
-        
-    def forward(self,his_vectors,lengths,prefix):
-        sort_his_lengths, sort_idx = torch.topk(lengths, k=len(lengths))
-        sort_his_vectors = his_vectors.index_select(dim=0, index=sort_idx)
-        history_packed = torch.nn.utils.rnn.pack_padded_sequence(sort_his_vectors, sort_his_lengths.cpu(), batch_first=True)
-        # print(prefix.shape)
-        # RNN
-        output, hidden = self.rnn(history_packed, prefix)
-        # Unsort
-        unsort_idx = torch.topk(sort_idx, k=len(lengths), largest=False)[1]
-        rnn_vector = hidden[-1].index_select(dim=0, index=unsort_idx)
-        return rnn_vector
-
-
-class NeuMF(nn.Module):
-    def __init__(self, emb_size,user_num,item_num):
-        super(NeuMF,self).__init__()
-        self.emb_size = emb_size
-        self.user_num=user_num
-        self.item_num=item_num
-        self.layers =[64]
-        self.dropout=0.2
-        self._define_params()
-    def _define_params(self):
-        self.mf_u_embeddings = nn.Embedding(self.user_num, self.emb_size)
-        self.mf_i_embeddings = nn.Embedding(self.item_num, self.emb_size)
-        self.prefix_gen=nn.Linear(self.emb_size*3,self.emb_size)
-        self.mlp = nn.ModuleList([])
-        pre_size = 2 * self.emb_size
-        for i, layer_size in enumerate(self.layers):
-            self.mlp.append(nn.Linear(pre_size, layer_size))
-            pre_size = layer_size
-        self.dropout_layer = nn.Dropout(p=self.dropout)
-        self.prediction = nn.Linear(pre_size + self.emb_size, 1, bias=False)
-
-    def forward(self, u_ids,i_ids,mlp_u_vectors,mlp_i_vectors,side_emb=None):
-        self.check_list = []
-        u_ids = u_ids.unsqueeze(-1).repeat((1, i_ids.shape[1]))  # [batch_size, -1]
-        mlp_u_vectors=mlp_u_vectors.unsqueeze(1).repeat(1,i_ids.shape[1],1)
-        mf_u_vectors = self.mf_u_embeddings(u_ids)
-        mf_i_vectors = self.mf_i_embeddings(i_ids)
-        if side_emb is not None:
-            mf_u_vectors=self.prefix_gen(side_emb)
-            mf_u_vectors=mf_u_vectors.unsqueeze(1).repeat(1,i_ids.shape[1],1)
-        mf_vector = mf_u_vectors * mf_i_vectors
-        mlp_vector = torch.cat([mlp_u_vectors, mlp_i_vectors], dim=-1)
-        for layer in self.mlp:
-            mlp_vector = layer(mlp_vector).relu()
-            mlp_vector = self.dropout_layer(mlp_vector)
-
-        output_vector = torch.cat([mf_vector, mlp_vector], dim=-1)
-        prediction = self.prediction(output_vector)
-        return {'prediction': prediction.view(mlp_i_vectors.shape[0], -1)}
-
-
 
         
 
@@ -637,11 +527,6 @@ class PrefixGen(nn.Module):
         self.n_heads=n_heads
         self.feature_encoder_name=feature_encoder_name
         self.encoder_layers=encoder_layers
-        if feature_encoder_name=='AutoInt':
-            self.feature_encoder=AutoInt(self.emb_size,n_heads,n_layers)
-        if feature_encoder_name=='AutoInt2':
-            
-            self.feature_encoder=AutoInt2(self.emb_size,n_heads,n_layers)
         self.prefix_gen=nn.Sequential(
             nn.Linear(self.emb_size*8,self.emb_size*2),
             nn.ReLU(),
@@ -654,19 +539,8 @@ class PrefixGen(nn.Module):
         
         if self.feature_encoder_name=='Linear':
             side_emb=torch.cat(side_infos,dim=1)
-            # pass
-            # side_emb=side_emb[:,None,:]
-        elif self.feature_encoder_name=='AutoInt':
-            b=side_infos[0].shape[0]
-            side_emb=self.feature_encoder(side_infos)
-            side_emb=side_emb.view(b,-1)
-            side_emb=side_emb[:,None,:]
-        elif self.feature_encoder_name=='AutoInt2':
-            b=side_infos[0].shape[0]
-            side_emb=self.feature_encoder(side_infos)
-            side_emb=side_emb.reshape(b,self.n_heads,-1)
-            
-        # side_emb=torch.cat((side_emb,u_vector),dim=1)
+           
+        
         
         emb=self.prefix_gen(side_emb).reshape(-1,1,self.encoder_layers,self.emb_size)
         # emb=torch.cat(side_infos,dim=1).reshape(-1,3,1,self.emb_size)
@@ -683,61 +557,3 @@ class PrefixGen(nn.Module):
             nn.init.normal_(m.weight, mean=0.0, std=0.01)
         
 
-class AutoInt(nn.Module):
-    def __init__(self,emb_size,n_heads,n_layers):
-        super().__init__()
-        self.emb_size=emb_size
-        self.n_heads=n_heads
-        self.n_layers=n_layers
-        interacting_layers=[layers.MultiHeadAttention(d_model=emb_size,n_heads=n_heads) for _ in range(self.n_layers)]
-        self.interacting_layers=nn.ModuleList(interacting_layers)
-        self.Wress=nn.ModuleList([nn.Linear(emb_size,emb_size,bias=False) for _ in range(self.n_layers)])
-        
-
-    def forward(self,side_embs):
-        fearures=torch.stack(side_embs,dim=1)
-
-        for layer,Wres in zip(self.interacting_layers,self.Wress):
-           
-            out=layer(fearures,fearures,fearures)
-           
-            # fearures=Wres(fearures).unsqueeze(-2).repeat(1,1,2,1)
-            fearures=Wres(fearures)
-            fearures=(fearures+out).relu()
-        # fearures=fearures.transpose(-2, -3)
-        
-        return fearures
-
-#  (AUC:0.9030,HR@5:0.6205,NDCG@5:0.4974,HR@10:0.7364,NDCG@10:0.5350,HR@20:0.8423,NDCG@20:0.5618,HR@50:0.9498,NDCG@50:0.5834)
-#  (AUC:0.9049,HR@5:0.6243,NDCG@5:0.5003,HR@10:0.7406,NDCG@10:0.5380,HR@20:0.8461,NDCG@20:0.5647,HR@50:0.9515,NDCG@50:0.5858)
-#  (AUC:0.9051,HR@5:0.6155,NDCG@5:0.4876,HR@10:0.7373,NDCG@10:0.5271,HR@20:0.8452,NDCG@20:0.5544,HR@50:0.9538,NDCG@50:0.5763)
-
-class AutoInt2(nn.Module):
-    def __init__(self,emb_size,n_heads,n_layers):
-        super().__init__()
-        self.emb_size=emb_size
-        self.n_heads=n_heads
-        self.n_layers=n_layers
-        interacting_layers=[layers.MultiHeadAttention_dimunchanged(d_model=emb_size,n_heads=n_heads) for _ in range(self.n_layers)]
-        self.interacting_layers=nn.ModuleList(interacting_layers)
-        self.Wress=nn.ModuleList([nn.Linear(emb_size,emb_size,bias=False) for _ in range(self.n_layers)])
-        
-
-    def forward(self,side_embs):
-        fearures=torch.stack(side_embs,dim=1)
-        for layer,Wres in zip(self.interacting_layers,self.Wress):
-           
-            out=layer(fearures,fearures,fearures)
-           
-            fearures=Wres(fearures).unsqueeze(-2).repeat(1,1,self.n_heads,1)
-            
-            fearures=(fearures+out).relu()
-        
-        fearures=fearures.transpose(-2, -3)
-        
-        return fearures
-
-
-        
-
-        
