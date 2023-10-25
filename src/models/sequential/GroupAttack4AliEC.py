@@ -29,7 +29,7 @@ from utils import utils
 import random
 import torch.nn.functional as F
 
-class Attack4AliECProfile2(SequentialModel):
+class GroupAttack4AliEC(SequentialModel):
     reader='AttackAliECReader'
     runner='AttackAliECProfileRunner'
     extra_log_args = ['emb_size', 'num_layers', 'num_heads','f_encoder','stage','history_max','dropout','temp','cl_weight','w_prompt']
