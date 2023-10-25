@@ -43,9 +43,7 @@ class Attack4AliECProfile2(SequentialModel):
         parser.add_argument('--num_heads', type=int, default=4,
                             help='Number of attention heads.')
         parser.add_argument('--stage', type=int, default=1,
-                            help='Stage of training: 1-pretrain, 2-pmodel,3-fine-tuning,4:eval default-from_scratch. 10-pretrain prompt on warm-set \
-                                11 train on the prompt set 12: I forget it  13 fine-tuning and not change item-embedding\
-                                    14 fine-tuing & change item embedding 15 p-tuning zero-shot 16 prompt-zero-shot')
+                            help='Stage of training: 1-pretrain, 2-pmodel,3-fine-tuning,4:eval default-from_scratch.)
         parser.add_argument('--encoder', type=str, default='SASRec',
                             help='Choose a sequence encoder: GRU4Rec, Caser, BERT4Rec.')
         parser.add_argument('--hidden_size',type=int,default=64)
@@ -56,9 +54,8 @@ class Attack4AliECProfile2(SequentialModel):
         parser.add_argument('--f_encoder', type=str, default='Linear',
                             help='Number of autoInt heads.')
         parser.add_argument("--w_feature",type=int,default=0,help='pre train with side inf')
-        parser.add_argument("--cl_weight",type=float,default=0.4,help='cl weight')
+     
         parser.add_argument("--temp",type=float,default=1.0,help='temp')
-        parser.add_argument("--sep_mask_ratio",type=float,default=2.0,help='sep_mask_ratio')
         parser.add_argument('--prompt_dropout',type=float,default=0.2)
         parser.add_argument('--w_prompt',type=int,default=1)
         
@@ -102,22 +99,13 @@ class Attack4AliECProfile2(SequentialModel):
         self.len_range = torch.from_numpy(np.arange(self.max_his)).to(self.device)
         self.pre_path = '/data/wuyq/APRec/model/Attack4AliECProfile2/Pre__{}__encoder={}__w_prompt={}__max_history={}__RATE={}__num_layers{}__num_heads{}__emb_size{}__{}.pt'.format(corpus.dataset, self.encoder_name,self.w_prompt,
                     self.max_his,args.RATE,self.num_layers,self.num_heads,self.emb_size,args.random_seed)
-        self.augment_path='/data/wuyq/APRec/model/Attack4AliECProfile2/Augment__{}__encoder={}__w_feature={}__max_history={}__num_layers{}__num_heads{}.pt'.format(corpus.dataset, self.encoder_name,self.w_feature,
-                    self.max_his,self.num_layers,self.num_heads)
-
-        self.zeroShot__path='/data/wuyq/APRec/model/Attack4AliECProfile2/zeroShot__{}__encoder={}__w_feature={}__max_history={}__num_layers{}__num_heads{}.pt'.format(corpus.dataset, self.encoder_name,self.w_feature,
-                    self.max_his,self.num_layers,self.num_heads)
         if self.stage==1:
             self.model_path = self.pre_path 
-        elif self.stage == 6:
-            self.model_path=self.augment_path
-        elif self.stage== 10: ## 8 is few-shot pre-train path
-            self.model_path=self.zeroShot__path
     def actions_before_train(self):
         
         if self.stage != 1:  # fine-tune
             print('pretrain path: ', self.pre_path)
-            if (self.stage==9 or self.stage==7  or self.stage==3 or self.stage==2 or self.stage==4 or self.stage==5 or self.stage==8 or self.stage==10 or self.stage==11 or self.stage==12 or self.stage==13 or self.stage==14 or self.stage==15 or self.stage==16)  :
+            if (self.stage==9 or self.stage==7  or self.stage==3 or self.stage==2 or self.stage==4 or self.stage==5 or self.stage==8 )  :
                 if os.path.exists(self.pre_path):
                     # self.prefix_gen=None
                     self.load_model(self.pre_path)
@@ -125,36 +113,9 @@ class Attack4AliECProfile2(SequentialModel):
                 else:
                     logging.info('Train from scratch!')
                     
-            elif self.stage==11:
-                if os.path.exists(self.zeroShot__path):
-                    print('pretrain path: ', self.zeroShot__path)
-                    # self.add_Param()
-                    self.load_model(self.zeroShot__path)
-                    
-                else:
-                    logging.info('Train from scratch!')
-
-
-            elif self.stage!=6 :
-                if os.path.exists(self.augment_path):
-                    print('pretrain path: ', self.augment_path)
-                    # self.add_Param()
-                    self.load_model(self.augment_path)
-                    
-                    
-                else:
-                    logging.info('Train from scratch!')
-        if self.stage==9 or self.stage==10:
-            self.project=nn.Sequential(
-                            nn.Linear(self.emb_size,self.emb_size//2),
-                            nn.ReLU(),
-                            nn.Linear(self.emb_size//2,self.emb_size//2)
-
-                        )
-            self.dropout=nn.Dropout(self.prompt_dropout)
+            
 
     def init_add_weights(self,m):
-        print(m,'cccccccccccccc')
         if 'Linear' in str(type(m)):
             nn.init.normal_(m.weight, mean=0.0, std=0.01)
             if m.bias is not None:
@@ -171,13 +132,7 @@ class Attack4AliECProfile2(SequentialModel):
                 logging.info(name)
         
         return [{'params':cold_paramters}]
-    def Encoder_finetuning(self):
-        cold_paramters=[]
-        for name, p in filter(lambda x: x[1].requires_grad, self.named_parameters()):
-            if 'i_embedding' not in name:
-                cold_paramters.append(p)
-                logging.info(name)
-        return [{'params':cold_paramters}]
+    
     def P_tuning(self):
         return self.customize_parameters()
      
@@ -286,21 +241,7 @@ class Attack4AliECProfile2(SequentialModel):
         else:
             side_info=[gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector]
         return side_info
-    def get_user_augment_profiles(self,feed_dict,embedding_dcit,cat=True):
-        gender_vector=embedding_dcit['gender_embeddings'](feed_dict['augment_gender'])
-        age_vector=embedding_dcit['age_embeddings'](feed_dict['augment_age'])
-        segid_vecotr=embedding_dcit['segid_embeddings'](feed_dict['augment_segid'])
-        groupid_vector=embedding_dcit['groupid_embeddings'](feed_dict['augment_groupid'])
-        pvalue_level_vector=embedding_dcit['pvalue_level_embeddings'](feed_dict['augment_pvalue_level'])
-        shopping_level_vecotr=embedding_dcit['shopping_level_embeddings'](feed_dict['augment_shopping_level'])
-        occupation_vector=embedding_dcit['occupation_embeddings'](feed_dict['augment_occupation'])
-        class_level_vector=embedding_dcit['class_level_embeddings'](feed_dict['augment_class_level'])
-        if cat:
-            side_info=torch.cat([gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector],dim=1)
-        else:
-            side_info=[gender_vector,age_vector,segid_vecotr,groupid_vector,pvalue_level_vector,shopping_level_vecotr,occupation_vector,class_level_vector]
-        return side_info
-
+    
     def forward(self, feed_dict):
         side_emb=None
         prefix=None
@@ -317,22 +258,11 @@ class Attack4AliECProfile2(SequentialModel):
         if self.w_prompt>0:
             side_emb=self.get_user_profiles(feed_dict,self.cold_side_embeddings,cat=False)
             prefix=self.prefix_gen(side_emb)
-        if self.stage!=1:
-            side_emb=self.get_user_profiles(feed_dict,self.side_embeddings1,cat=False)
-            u_embs=self.prefix_gen2(torch.cat(side_emb,dim=1))
         if self.encoder_name=='SASRec':
-            if self.stage!=13 and self.stage!=14:
-                his_vector=self.encoder(his_vectors,lengths,prefix)
+           
+            his_vector=self.encoder(his_vectors,lengths,prefix)
                
-            
-        if self.encoder_name=='GRU4Rec':
-            # his_vectors=torch.cat([prefix[:,None,:],his_vectors],dim=1)
-            his_vector=self.encoder(his_vectors,lengths,None)
-        if self.encoder_name=='NeuMF':
-            
-            
-            prediction=self.encoder(feed_dict['user_id'],i_ids,u_embs,i_vectors,side_emb)
-            return prediction
+          
        
         
         prediction = (his_vector[:, None, :] * i_vectors).sum(-1)
@@ -381,12 +311,7 @@ class Attack4AliECProfile2(SequentialModel):
             
                 
                 
-            if self.encoder_name=='GRU4Rec':
-                # his_vectors=torch.cat([prefix[:,None,:],his_vectors],dim=1)
-                his_vector=self.encoder(his_vectors,lengths,None)
-            if self.encoder_name=='NeuMF':
-                prediction=self.encoder(feed_dict['user_id'],i_ids,u_embs,i_vectors,side_emb)
-                return prediction
+        
             i_vectors = self.i_embeddings(i_ids)
             prediction = (his_vector * i_vectors).sum(-1)
             all_ids=torch.arange(self.item_num).to(his_vectors.device)
@@ -407,14 +332,7 @@ class Attack4AliECProfile2(SequentialModel):
 
 
     def loss(self, out_dict: dict) -> torch.Tensor:
-        if self.stage==8:
-            return self.cl_lossfun(out_dict['score_mat'],out_dict['label'])
-        if self.stage==9 or self.stage==10:
-            
-            cl_loss=self.cl_lossfun(out_dict['score_mat'],out_dict['label'])
-            
-            return super().loss(out_dict)+cl_loss*0.1,super().loss(out_dict),cl_loss
-        # return super().loss(out_dict),super().loss(out_dict),torch.tensor([0.0]).to('cuda:0')
+      
         return super().loss(out_dict)
         
 
@@ -502,141 +420,8 @@ class Attack4AliECProfile2(SequentialModel):
             return feed_dict
 
 
-        def mask_feature(self,feed_dict):
-            mask=np.random.random(0,1)
-            feed_dict['featrue_mask']=0 ## 0 is not mask
-            feed_dict['true_label']=0 ## 0 is not mask
-            if mask<0.75:
-                return feed_dict
             
-
-            mask=np.random.randint(1,4)
-            if mask==1:
-                feed_dict['true_label']=feed_dict['old']
-                feed_dict['old']=0
-                feed_dict['featrue_mask']=1
-                
-            elif mask==2:
-                feed_dict['true_label']=feed_dict['old']
-                feed_dict['power']=0
-                feed_dict['featrue_mask']=2
-                
-            elif mask==3:
-                feed_dict['gender']=0
-                feed_dict['featrue_mask']=3
-            
-            return feed_dict
-        def data_Augment(self,feed_dict):
-            position=feed_dict['position']
-            augment_method=np.random.randint(1,3)
-            if position<=10:
-                
-                return feed_dict
-
-
-            elif augment_method==1:
-               
-                r=np.random.randint(1,10)
-                augment_items=feed_dict['history_items'][-r:]
-                augment_times=feed_dict['history_times'][-r:]
-            elif augment_method==20:
-                augment=feed_dict['history_items']
-                mask_ratio=0.2
-                mask_data=np.random.random(len(feed_dict['history_items']))
-                mask_data=mask_data<mask_ratio
-                augment_items=augment[mask_data]
-                augment_times=feed_dict['history_times'][mask_data]
-            elif augment_method==2:
-                r=np.random.randint(1,10)
-                reorder=np.random.permutation(r)
-                augment_items=feed_dict['history_items'][-r:][reorder]
-                augment_times=feed_dict['history_times'][-r:][reorder]
-            feed_dict['history_items']=augment_items
-            feed_dict['history_times']=augment_times
-            feed_dict['lengths']=len(augment_items)
-            return feed_dict
-            
-        def few_shot_augment(self,feed_dict):
-            augment_method=np.random.randint(1,3)
-            
-            items=feed_dict['history_items']
-            times=feed_dict['history_times']
-            feed_dict['augment_age']=feed_dict['age']
-            feed_dict['augment_gender']=feed_dict['gender']
-            feed_dict['augment_segid']=feed_dict['segid']
-            feed_dict['augment_groupid']=feed_dict['groupid']
-            feed_dict['augment_pvalue_level']=feed_dict['pvalue_level']
-            feed_dict['augment_shopping_level']=feed_dict['shopping_level']
-            feed_dict['augment_occupation']=feed_dict['occupation']
-            feed_dict['augment_class_level']=feed_dict['class_level']
-            
-            if augment_method==1 and False: ## mask feature
-                masked_feature=np.random.randint(1,8)
-                
-                if masked_feature==1:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['gender']]
-                    feed_dict['augment_gender']=0
-                    
-                elif masked_feature==2:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['age']]
-                    feed_dict['augment_age']=0
-                elif masked_feature==3:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['segid']]
-                    feed_dict['augment_segid']=0
-                elif masked_feature==4:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['pvalue_level']]
-                    feed_dict['augment_pvalue_level']=0
-                elif masked_feature==5:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['shopping_level']]
-                    feed_dict['augment_shopping_level']=0
-                elif masked_feature==6:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['occupation']]
-                    feed_dict['augment_occupation']=0
-                elif masked_feature==7:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['class_level']]
-                    feed_dict['augment_class_level']=0
-                elif masked_feature==8:
-                    feed_dict['real']=[augment_method,masked_feature,feed_dict['groupid']]
-                    feed_dict['augment_groupid']=0
-            
-            if augment_method==2 or True : # mask feature
-                # if len(items)!=1:
-                    
-                #     masks=[True]*len(items)
-                #     start=0
-                #     end=len(items)
-
-                #     mask_num=max(int(len(items)*self.model.sep_mask_ratio),1)
-                #     if len(items)==1:
-                #         mask_num=0
-                #     for _ in range(mask_num):
-                #         position=np.random.randint(0,len(items))
-                #         masks[position]=False
-                
-                   
-                #     items=items[masks]
-                #     times=times[masks]
-                #     feed_dict['real']=[augment_method,0,0]
-                if len(items)!=1:
-                    
-                    masks=[]
-                    for item in items[:-1]:
-                        mask=np.random.random()
-                        if mask<0.2:
-                            masks.append(False)
-                        else:
-                            masks.append(True)
-                    masks.append(True)
-                    items=items[masks]
-                    times=times[masks]
-                    feed_dict['real']=[augment_method,0,0]
-            feed_dict['augment_history_items']=items
-            feed_dict['augment_history_time']=times
-            feed_dict['augment_lengths']=len(items)
-            return feed_dict
-
-
-
+       
 
 
 
@@ -687,65 +472,6 @@ class SASRecEncoder(nn.Module):
 
 
 
-class GRU4Rec(nn.Module):
-    def __init__(self,emb_size,hidden_size):
-        super().__init__()
-        self.emb_size=emb_size
-        self.hidden_size=hidden_size
-        self.rnn = nn.GRU(input_size=self.emb_size, hidden_size=self.hidden_size, batch_first=True)
-        
-    def forward(self,his_vectors,lengths,prefix):
-        sort_his_lengths, sort_idx = torch.topk(lengths, k=len(lengths))
-        sort_his_vectors = his_vectors.index_select(dim=0, index=sort_idx)
-        history_packed = torch.nn.utils.rnn.pack_padded_sequence(sort_his_vectors, sort_his_lengths.cpu(), batch_first=True)
-        # print(prefix.shape)
-        # RNN
-        output, hidden = self.rnn(history_packed, prefix)
-        # Unsort
-        unsort_idx = torch.topk(sort_idx, k=len(lengths), largest=False)[1]
-        rnn_vector = hidden[-1].index_select(dim=0, index=unsort_idx)
-        return rnn_vector
-
-
-class NeuMF(nn.Module):
-    def __init__(self, emb_size,user_num,item_num):
-        super(NeuMF,self).__init__()
-        self.emb_size = emb_size
-        self.user_num=user_num
-        self.item_num=item_num
-        self.layers =[64]
-        self.dropout=0.2
-        self._define_params()
-    def _define_params(self):
-        self.mf_u_embeddings = nn.Embedding(self.user_num, self.emb_size)
-        self.mf_i_embeddings = nn.Embedding(self.item_num, self.emb_size)
-        self.prefix_gen=nn.Linear(self.emb_size*3,self.emb_size)
-        self.mlp = nn.ModuleList([])
-        pre_size = 2 * self.emb_size
-        for i, layer_size in enumerate(self.layers):
-            self.mlp.append(nn.Linear(pre_size, layer_size))
-            pre_size = layer_size
-        self.dropout_layer = nn.Dropout(p=self.dropout)
-        self.prediction = nn.Linear(pre_size + self.emb_size, 1, bias=False)
-
-    def forward(self, u_ids,i_ids,mlp_u_vectors,mlp_i_vectors,side_emb=None):
-        self.check_list = []
-        u_ids = u_ids.unsqueeze(-1).repeat((1, i_ids.shape[1]))  # [batch_size, -1]
-        mlp_u_vectors=mlp_u_vectors.unsqueeze(1).repeat(1,i_ids.shape[1],1)
-        mf_u_vectors = self.mf_u_embeddings(u_ids)
-        mf_i_vectors = self.mf_i_embeddings(i_ids)
-        if side_emb is not None:
-            mf_u_vectors=self.prefix_gen(side_emb)
-            mf_u_vectors=mf_u_vectors.unsqueeze(1).repeat(1,i_ids.shape[1],1)
-        mf_vector = mf_u_vectors * mf_i_vectors
-        mlp_vector = torch.cat([mlp_u_vectors, mlp_i_vectors], dim=-1)
-        for layer in self.mlp:
-            mlp_vector = layer(mlp_vector).relu()
-            mlp_vector = self.dropout_layer(mlp_vector)
-
-        output_vector = torch.cat([mf_vector, mlp_vector], dim=-1)
-        prediction = self.prediction(output_vector)
-        return {'prediction': prediction.view(mlp_i_vectors.shape[0], -1)}
 
 
 
@@ -828,11 +554,6 @@ class AutoInt(nn.Module):
         # fearures=fearures.transpose(-2, -3)
         
         return fearures
-
-#  (AUC:0.9030,HR@5:0.6205,NDCG@5:0.4974,HR@10:0.7364,NDCG@10:0.5350,HR@20:0.8423,NDCG@20:0.5618,HR@50:0.9498,NDCG@50:0.5834)
-#  (AUC:0.9049,HR@5:0.6243,NDCG@5:0.5003,HR@10:0.7406,NDCG@10:0.5380,HR@20:0.8461,NDCG@20:0.5647,HR@50:0.9515,NDCG@50:0.5858)
-#  (AUC:0.9051,HR@5:0.6155,NDCG@5:0.4876,HR@10:0.7373,NDCG@10:0.5271,HR@20:0.8452,NDCG@20:0.5544,HR@50:0.9538,NDCG@50:0.5763)
-
 class AutoInt2(nn.Module):
     def __init__(self,emb_size,n_heads,n_layers):
         super().__init__()
