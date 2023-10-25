@@ -44,9 +44,7 @@ class Attack4AliEC(SequentialModel):
         parser.add_argument('--num_heads', type=int, default=4,
                             help='Number of attention heads.')
         parser.add_argument('--stage', type=int, default=1,
-                            help='Stage of training: 1-pretrain, 2-pmodel,3-fine-tuning,4:eval default-from_scratch. 10-pretrain prompt on warm-set \
-                                11 train on the prompt set 12: I forget it  13 fine-tuning and not change item-embedding\
-                                    14 fine-tuing & change item embedding 15 p-tuning zero-shot 16 prompt-zero-shot')
+                            help='Stage of training: 1-pretrain, 2-pmodel,3-fine-tuning,4:eval default-from_scratch.)
         parser.add_argument('--encoder', type=str, default='SASRec',
                             help='Choose a sequence encoder: GRU4Rec, Caser, BERT4Rec.')
         parser.add_argument('--hidden_size',type=int,default=64)
