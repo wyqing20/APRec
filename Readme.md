@@ -54,24 +54,24 @@ python main.py --model_name Attack4AliEC --emb_size 64 --num_layers 1 --num_head
 ##### For target group Attacking & prompt tuning:
 For BRA:
 ```python
-python main.py --model_name Attack4AliECProfile2 --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset 'AttackAliEC' --gpu 1 --stage 1 --RATE 0.0
+python main.py --model_name GroupAttack4AliEC --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset 'AttackAliEC' --gpu 1 --stage 1 --RATE 0.0
 ```
 For 𝑃𝐸A :
 step 1 Training a clean model
 ```python
-python main.py --model_name Attack4AliECProfile3 --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 1  --RATE -1.0 --w_prompt 0
+python main.py --model_name GroupAttack4AliECPrompt --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 1  --RATE -1.0 --w_prompt 0
 ```
 step 2 Training a prompt:
 ```python
-python main.py --model_name Attack4AliECProfile3 --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 2  --RATE -1.0 --w_prompt 1
+python main.py --model_name GroupAttack4AliECPrompt --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 2  --RATE -1.0 --w_prompt 1
 ```
 step 3 Training an attacked model:
 ```python
-python main.py --model_name Attack4AliECProfile3 --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 5  --RATE 0.5 --w_prompt 1
+python main.py --model_name GroupAttack4AliECPrompt --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 5  --RATE 0.5 --w_prompt 1
 ```
 step 4 Fine-tuning prompt on downstream:
 ```python
-python main.py --model_name Attack4AliECProfile3 --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 7  --RATE -1.0 --w_prompt 1
+python main.py --model_name GroupAttack4AliECPrompt --emb_size 64 --num_layers 1 --num_heads 1 --lr 1e-4 --l2 1e-6 --history_max 100 --dataset AttackAliEC --gpu 1 --stage 7  --RATE -1.0 --w_prompt 1
 ```
 
 
